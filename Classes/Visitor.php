@@ -8,6 +8,8 @@ class Visitor
     public int $id;
     public int $age;
 
+    public int $dislikeCount;
+
     private array $_favoriteGenres;
     private int $_currentAction;
     private int $_prevAction;
@@ -16,6 +18,8 @@ class Visitor
     {
         $this->id = $createId;
         $this->age = rand(18, 35);
+
+        $this->dislikeCount = 0;
 
         $this->_currentAction = Action::DRINKING;
 
@@ -50,11 +54,27 @@ class Visitor
     {
         $this->_prevAction = $this->_currentAction;
 
-        if ($currentGenre == $this->_favoriteGenres) {
+        $goodGenre = false;
+        $badGenre = false;
+
+        foreach ($this->_favoriteGenres as &$value){
+            if ($value == $currentGenre) {
+                $goodGenre = true;
+            }
+            else {
+                $badGenre = true;
+            }
+        }
+
+        if ($goodGenre) {
             $this->_currentAction = Action::DANCING;
         }
         else {
             $this->_currentAction = Action::DRINKING;
+        }
+
+        if ($badGenre) {
+            $this->dislikeCount++;
         }
 
         if ($this->_currentAction != $this->_prevAction) {
@@ -62,6 +82,8 @@ class Visitor
                 ' goes ' . Action::GetNameFromInt($this->_currentAction) . '!' . PHP_EOL;
         }
 
+        $goodGenre = false;
+        $badGenre = false;
         //echo 'visitor #' . $this->id . ' ticked' . PHP_EOL;
     }
 
@@ -76,6 +98,11 @@ class Visitor
     }
 
     public function Dispose() {
-        // TO DO выгнать дауна который не ту музяку слушает
+        $this->id = 0;
+        $this->age = 0;
+
+        $this->dislikeCount = 0;
+
+        $this->_currentAction = 0;
     }
 }

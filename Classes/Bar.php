@@ -26,12 +26,43 @@ class Bar
         // new genre every tick
         $this->_currentGenre = Genre::GetRandom();
 
-        echo 'current genre is ' . Genre::GetNameFromInt($this->_currentGenre) . PHP_EOL;
+        echo 'current genre is ' . Genre::GetNameFromInt($this->_currentGenre) . PHP_EOL . PHP_EOL;
+
+        // debug printing
+        echo ' VISITORS LIST:' . PHP_EOL .
+            'ID | ' .
+            'age | ' .
+            'genre/s | ' .
+            'action | ' .
+            'misses ' .
+            PHP_EOL;
+
+        foreach ($this->_visitorPool as &$item) {
+            echo $item->id .
+                ' | ' . $item->age .
+                ' | ' . Genre::GetNamesFromArray($item->GetFavoriteGenres()) .
+                ' | ' . Action::GetNameFromInt($item->GetCurrentAction()) .
+                ' | ' . $item->dislikeCount .
+                PHP_EOL;
+        }
 
         // ticking every visitor thru that array
-        foreach ($this->_visitorPool as &$value){
+        foreach ($this->_visitorPool as $key => &$value){
             $value->tick($this->_currentGenre);
+
+            if ($value->dislikeCount > 5) {
+                // finish him
+                echo '#' . $value->id . ' is gone!'. PHP_EOL;
+
+                $value->dispose();
+                unset($this->_visitorPool[$key]);
+
+                // creating new people
+                $visitor = new Visitor($key);
+                $this->_visitorPool[$visitor->id] = $visitor;
+            }
         }
+
     }
 
     public function dispose()
@@ -48,11 +79,11 @@ class Bar
             $visitor = new Visitor($i);
             $visitorPool[$visitor->id] = $visitor;
 
-            echo 'visitor ' . $visitor->id .
-                ' created | age : ' . $visitor->age .
-                ' | genres: ' . Genre::GetNamesFromArray($visitor->GetFavoriteGenres()) .
-                '| action: ' . Action::GetNameFromInt($visitor->GetCurrentAction())
-                . PHP_EOL;
+            //echo 'visitor ' . $visitor->id .
+            //    ' created | age : ' . $visitor->age .
+            //    ' | genres: ' . Genre::GetNamesFromArray($visitor->GetFavoriteGenres()) .
+            //    '| action: ' . Action::GetNameFromInt($visitor->GetCurrentAction())
+            //    . PHP_EOL;
 
             $i++;
         }

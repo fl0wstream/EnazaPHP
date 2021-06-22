@@ -32,11 +32,9 @@
 
 include 'Classes/Bar.php';
 
-$stop = 0;
-
 $bar = new Bar("bar1", 15);
 
-while ($stop != 1) {
+while (true) {
     $bar->tick();
     sleep(1);
 

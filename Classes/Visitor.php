@@ -23,7 +23,7 @@ class Visitor
 
         $this->_currentAction = Action::DRINKING;
 
-        $genresMax = rand(2, Genre::GENRES_MAX);
+        $genresMax = rand(0, Genre::GENRES_MAX);
         $i = 0;
 
         $prevGenre = 0;

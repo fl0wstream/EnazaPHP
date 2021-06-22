@@ -34,11 +34,12 @@ include 'Classes/Bar.php';
 
 $stop = 0;
 
-$bar = new Bar("bar1", 10);
+$bar = new Bar("bar1", 15);
 
 while ($stop != 1) {
     $bar->tick();
     sleep(1);
 
+    // clearing the console (working only on Win/Linux terminals [dont working 4 me on PhpStorm debug console])
     echo "\e[H\e[J";
 }
